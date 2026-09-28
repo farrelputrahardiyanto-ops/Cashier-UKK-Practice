@@ -17,6 +17,8 @@ Route::middleware(['auth', 'role:admin'])->group(function(){
 
     Route::livewire('/customers', 'customers')->name('customers');
 
+    Route::livewire('/report', 'report')->name('report');
+
    
 });
 

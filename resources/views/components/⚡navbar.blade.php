@@ -34,6 +34,7 @@ new class extends Component
                 <a href="{{route('customers')}}"  @if (auth()->user()->role == 'cashier' ) hidden @endif>Customers</a>
                 <a href="{{route('invoice')}}">Invoice</a>
                 <a href="{{route('invoice_detail')}}">Invoice Detail</a>
+                <a href="{{route('report')}}" @if (auth()->user()->role == 'cashier') hidden @endif>Report</a>
             </div>
 
             <div class="flex space-x-3">
