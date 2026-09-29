@@ -43,6 +43,10 @@ new class extends Component
 
     public $best_seller;
 
+    public $best_cashier;
+
+    public $avg_total;
+
     
     public function mount()
     {
@@ -73,6 +77,17 @@ new class extends Component
         ->orderByDesc('total_qty')
         ->first();
 
+        $this->best_cashier = Invoice::whereBetween('created_at', [$this->startDate, $this->endDate])
+        ->select('user_id')
+        ->selectRaw('COUNT(id) as total')
+        ->groupBy('user_id')
+        ->orderByDesc('total')
+        ->first();
+
+        $this->avg_total = Invoice::whereBetween('created_at', [$this->startDate, $this->endDate])
+        ->selectRaw('AVG(total) as avg')
+        ->first();
+
       
         
     }
@@ -90,15 +105,37 @@ new class extends Component
 
 <div>
     
-    <div class="max-w-6xl p-4 mx-auto my-4">
+    <div class="max-w-6xl p-4 mx-auto my-4 overflow-x-auto">
         <h1 class="text-3xl py-5 font-semibold">Transaction Report {{$this->month_now}}</h1>
         <div class="flex justify-between">
             <div class="max-w-2xl">
                 <x-native-select :options="$this->month_option" wire:model.live="month_now"  />
             </div>
-            <div class="max-w-2xl">
-                <x-input placeholder="Search..." icon="magnifying-glass" class="max-w-2xl" wire:model.live="search"/>
+           
+        </div>
+
+        <div class="flex justify-between space-x-3 mt-4">
+            <div class="flex bg-gray-500 rounded-md w-full ">
+            <div class="flex justify-start ">
+                <img src="{{asset('storage/products/'. $this->best_seller->product->image) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
             </div>
+            <div class="w-full flex flex-col space-y-2 my-2">
+                <h1 class="text-lg font-semibold text-center ">Best Seller</h1>
+                <h1 class="text-3xl font-semibold text-center ">{{$this->best_seller->product->name}}</h1>
+                <p class="text-3xl font-semibold text-center">Purchases: {{$this->best_seller->total_qty}}</p>
+            </div>
+        </div>
+
+        <div class="flex bg-gray-500 rounded-md w-full ">
+            <div class="flex justify-start ">
+                <img src="{{asset('storage/users/'. $this->best_cashier->user->profile) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
+            </div>
+            <div class="w-full flex flex-col my-2 space-y-2">
+                <h1 class="text-lg font-semibold text-center ">Best Cashier</h1>
+                <h1 class="text-3xl font-semibold text-center">{{$this->best_cashier->user->name}}</h1>
+                <p class="text-3xl font-semibold text-center ">Transaction: {{$this->best_cashier->total}}</p>
+            </div>
+        </div>  
         </div>
 
         <div class="flex justify-evenly space-x-3 w-full my-3">
@@ -111,19 +148,17 @@ new class extends Component
                 <h1 class="text-2xl my-2 font-semibold text-center">{{$this->total_transaction}}</h1>
             </div>
             <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
-                <h1 class="text-lg font-semibold text-center my-1">Total Product</h1>
+                <h1 class="text-lg font-semibold text-center my-1">Product Sold</h1>
                 <h1 class="text-2xl my-2 font-semibold text-center">{{$this->total_product}}</h1>
+            </div>
+             <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
+                <h1 class="text-lg font-semibold text-center my-1">Average Invoice</h1>
+                <h1 class="text-2xl my-2 font-semibold text-center">Rp.{{number_format($this->avg_total->avg)}}</h1>
             </div>
             
         </div>
 
-        <div class="flex bg-gray-500 w-200 rounded-md w-full py-3">
-            <div class="flex justify-start">
-                <img src="{{asset('products/'. $this->best_seller->product->image) }}" alt="iamge" class="h-auto w-40 object-cover">
-            </div>
-            <h1 class="text-2xl my-2 font-semibold text-center">{{$this->best_seller->product->name}}</h1>
-        </div>
-
+        
 
     </div>
     {{-- Let all your things have their places; let each part of your business have its time. - Benjamin Franklin --}}

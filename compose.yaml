@@ -22,6 +22,7 @@ services:
       MYSQL_DATABASE: ukk2
     volumes:
       - mysql_data:/var/lib/mysql
+  
 
 volumes:
   mysql_data: 
