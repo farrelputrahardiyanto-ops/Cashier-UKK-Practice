@@ -16,37 +16,87 @@ new class extends Component
     }
 };
 ?>
+<div x-data="{ open: false }">
 
-<div>
     <nav class="dark:bg-gray-800 dark:text-gray-200 bg-stone-300 shadow-md py-2">
-        <div class="w-full p-3 flex justify-between">
 
-            <div class=" my-auto flex justify-between">
-                <a href=""><h1 class="my-auto text-lg">Halo Rex</h1></a>
+        <div class="w-full p-3 md:flex md:justify-between md:items-center">
 
-                <x-icon name="bars-3" class="md:hidden" />
+            {{-- Logo / Nama --}}
+            <div class="flex justify-between items-center">
+
+                <a href="">
+                    <h1 class="text-2xl font-semibold">Waduh Coffe</h1>
+                </a>
+
+                {{-- Hamburger --}}
+                <button
+                    class="md:hidden"
+                    x-on:click="open = !open"
+                >
+                    <x-icon name="bars-3" class="w-6 h-6" />
+                </button>
+
             </div>
 
-            <div class="flex flex-row space-x-3 my-auto ">
-                <a href="{{route('cashier')}}" >Cashier</a>
-                <a href="{{route('users')}}" @if (auth()->user()->role == 'cashier' ) hidden @endif>Users</a>
-                <a href="{{route('product')}}"  @if (auth()->user()->role == 'cashier' ) hidden @endif>Products</a>
-                <a href="{{route('customers')}}"  @if (auth()->user()->role == 'cashier' ) hidden @endif>Customers</a>
-                <a href="{{route('invoice')}}">Invoice</a>
-                <a href="{{route('invoice_detail')}}">Invoice Detail</a>
-                <a href="{{route('report')}}" @if (auth()->user()->role == 'cashier') hidden @endif>Report</a>
+
+            {{-- Navigation --}}
+            <div
+                class="mt-3 md:mt-0 md:block"
+                :class="{ 'hidden': !open }"
+            >
+
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-3">
+
+                    <a href="{{ route('cashier') }}">
+                        Cashier
+                    </a>
+
+                    @if (auth()->user()->role != 'cashier')
+                        <a href="{{ route('users') }}">
+                            Users
+                        </a>
+
+                        <a href="{{ route('product') }}">
+                            Products
+                        </a>
+
+                        <a href="{{ route('customers') }}">
+                            Customers
+                        </a>
+                    @endif
+
+                    <a href="{{ route('invoice') }}">
+                        Invoice
+                    </a>
+
+                    <a href="{{ route('invoice_detail') }}">
+                        Invoice Detail
+                    </a>
+
+                    @if (auth()->user()->role != 'cashier')
+                        <a href="{{ route('report') }}">
+                            Report
+                        </a>
+                    @endif
+
+                    <x-button
+                        negative
+                        x-on:confirm="{
+                            icon: 'warning',
+                            title: 'Yakin?',
+                            description: 'Yakin ingin Logout?',
+                            method: 'logout'
+                        }"
+                        label="Logout"
+                    />
+
+                </div>
+
             </div>
 
-            <div class="flex space-x-3">
-               
-                <x-button negative x-on:confirm="{
-                icon: 'warning',
-                title: 'Yakin?',
-                description: 'Yakin ingin Logout?',
-                method: 'logout'
-                }" label="Logout" />
-            </div>
         </div>
+
     </nav>
-    {{-- Order your soul. Reduce your wants. - Augustine --}}
+
 </div>

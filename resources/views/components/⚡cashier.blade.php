@@ -264,6 +264,8 @@ new class extends Component
 
     public function invoice()
     {
+
+        
         if($this->customer_id)
         {
             $customer = Customer::find($this->customer_id);
@@ -272,6 +274,11 @@ new class extends Component
         }
 
         $this->dispatch('open');
+        if($this->cart == [])
+            {
+                $this->dispatch('close');
+            }
+
     }
 
 
@@ -301,11 +308,11 @@ x-on:open.window="$openModal('invoice')"
 x-on:close.window="$closeModal('invoice')" 
 x-on:print.window="window.print()"
 >
-    <div class="grid grid-cols-12">
-        <div class="col-span-10">
+    <div class="grid grid-cols-12 ">
+        <div class="col-span-12 md:col-span-10 pb-40">
 
-            <div class="flex w-full my-2 px-3 py-5 justify-end">
-                <div class="max-w-2xl">
+            <div class="flex w-full my-2 px-3 py-5 justify-center md:justify-end ">
+                <div class=" w-full md:max-w-xl  ">
                     <x-input icon="magnifying-glass" wire:model.live="search" placeholder="Search..."  />
                 </div>
             </div>
@@ -313,7 +320,7 @@ x-on:print.window="window.print()"
             <div class="grid md:grid-cols-6 grid-cols-2 gap-4  px-3 my-2 h-auto  ">
                 @forelse ($products as $product)
                     <div class="flex flex-col shadow dark:bg-gray-800 rounded-md bg-stone-200">
-                        <img src="{{asset('storage/products/'. $product->image)}}" class="w-auto h-40 object-cover rounded-md" alt="">
+                        <img src="{{asset('storage/products/'. $product->image)}}" class="w-full h-40 object-cover rounded-md" alt="">
                         <h1 class="text-md text-center mb-1 mt-2 font-semibold">{{$product->name}}</h1>
                         @if ($product->discount > 0)
                             <h1 class="text-center text-xs  line-through">Rp.{{number_format($product->price)}}</h1>
@@ -341,15 +348,15 @@ x-on:print.window="window.print()"
         </div>
 
 
-        <div class="md:col-span-2 min-h-screen dark:bg-gray-900 bg-stone-200">
+        <div class="md:col-span-2 min-h-screen dark:bg-gray-900 bg-stone-200 md:block lg:block hidden overflow-y-auto">
              <div class="w-full mt-6  flex justify-center ">
-                <x-avatar size="w-20 h-20" :src="asset('storage/users/'. auth()->user()->profile )"/>
+                <x-avatar sm size="w-20 h-20" :src="asset('storage/users/'. auth()->user()->profile )"/>
              </div>
              <h1 class="my-1 text-3xl text-center">{{auth()->user()->name}}</h1>
 
              <h2 class="text-lg text-center my-5">Cart   </h2>
              @forelse ($cart as $item)
-             <div class="flex justify-between dark:bg-gray-900 border-2 border-gray-600 rounded-xl p-2  mx-3 mb-2">
+             <div class="flex justify-between dark:bg-gray-900 border-2 border-gray-600 rounded-xl p-2  mx-3 mb-2 ">
                  <div class="flex flex-col">
                     <h3 class="text-md">{{ $item['name']}}</h3>
 
@@ -389,6 +396,65 @@ x-on:print.window="window.print()"
                  </div>
              @endif
         </div>
+    </div>
+
+    <div class="fixed bottom-0 z-10 rounded-t-xl dark:bg-gray-900 w-full md:hidden">
+         <div class="w-full mt-6  flex justify-center space-x-2 ">
+            <div class="">
+                 <x-avatar s :src="asset('storage/users/'. auth()->user()->profile )"/>
+            </div>
+               
+                <h1 class="my-1 text-3xl text-center my-auto">{{auth()->user()->name}}</h1>
+             </div>
+             
+
+             <h2 class="text-lg text-center mt-1">Cart   </h2>
+             <div class="max-h-30 overflow-y-auto">
+                @forelse ($cart as $item)
+                <div class="flex justify-between dark:bg-gray-900 border-2 border-gray-600 rounded-xl p-2  mx-3 mb-2">
+                    <div class="flex flex-col">
+                        <h3 class="text-md">{{ $item['name']}}</h3>
+
+                        <p class="text-sm text-gray-500">Rp.{{number_format($item['price'])}}</p>
+                     </div>
+
+                    <div class="flex space-x-1 py-1">
+                        <x-button sm flat icon="plus" wire:click="addToCart('{{$item['id']}}')" />
+                        <h1 class="twxt-lg my-auto">{{$item['qty']}}</h1>
+                        <x-button sm flat icon="minus" wire:click="decreaseQty('{{$item['id']}}')" />
+                        <div class="absout -mx-4  -my-4">
+                            <x-mini-button rounded secondary icon="x-mark" class="w-0.5 h-0.5"   wire:click="deleteFromCart('{{$item['id']}}')"/>
+                        </div>
+                 </div>
+                
+             </div>
+
+             
+             @empty
+                <div class="w-full p-3">
+                     <x-alert info title="Cart Null" />
+                </div>
+             @endforelse
+
+             @if ($this->cart != Null)
+                 <div class="w-full flex flex-col spacey-2 justify-center px-3 h-auto">
+                    <x-native-select
+                    :options="$this->customers"
+                    option-value="id"
+                    option-label="name"
+                    label="Customer"
+                    wire:model="customer_id"
+                    placeholder="Pilih Cutomer"
+                     />
+                    
+                 </div>
+             @endif
+             
+             </div>
+             <div class="flex flex-col my-2 shadow-[35px_35px_35px_35px_rgba(0,0,0,0.25)] z-10">
+                <h1 class="text-center text-lg">Total: Rp.{{number_format($this->getTotal())}}</h1>
+                    <x-button label="Checkout"  wire:click="invoice" class="mx-auto my-3" />
+             </div>
     </div>
 
     <x-modal-card name="invoice" persistent >
