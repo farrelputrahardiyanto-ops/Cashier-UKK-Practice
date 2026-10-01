@@ -308,8 +308,8 @@ x-on:open.window="$openModal('invoice')"
 x-on:close.window="$closeModal('invoice')" 
 x-on:print.window="window.print()"
 >
-    <div class="grid grid-cols-12 ">
-        <div class="col-span-12 md:col-span-10 pb-40">
+    <div class="grid grid-cols-12  pb-15 md:pb-0">
+        <div class="col-span-12 md:col-span-10 pb-80">
 
             <div class="flex w-full my-2 px-3 py-5 justify-center md:justify-end ">
                 <div class=" w-full md:max-w-xl  ">

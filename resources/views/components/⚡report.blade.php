@@ -107,30 +107,31 @@ new class extends Component
     
     <div class="max-w-6xl p-4 mx-auto my-4 overflow-x-auto">
         <h1 class="text-3xl py-5 font-semibold">Transaction Report {{$this->month_now}}</h1>
-        <div class="flex justify-between">
+        <div class="flex justify-end">
             <div class="max-w-2xl">
                 <x-native-select :options="$this->month_option" wire:model.live="month_now"  />
             </div>
            
         </div>
 
-        <div class="flex justify-between space-x-3 mt-4">
-            <div class="flex bg-gray-500 rounded-md w-full ">
+        <div class="grid grid-cols-2 mt-4 gap-2">
+
+            <div class="col-span-2 md:col-span-1 flex justify-between   bg-gray-500 rounded-md w-full ">
             <div class="flex justify-start ">
                 <img src="{{asset('storage/products/'. $this->best_seller->product->image) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
             </div>
-            <div class="w-full flex flex-col space-y-2 my-2">
+            <div class="w-full flex flex-col space-y-2 py-3 my-2">
                 <h1 class="text-lg font-semibold text-center ">Best Seller</h1>
                 <h1 class="text-3xl font-semibold text-center ">{{$this->best_seller->product->name}}</h1>
                 <p class="text-3xl font-semibold text-center">Purchases: {{$this->best_seller->total_qty}}</p>
             </div>
         </div>
 
-        <div class="flex bg-gray-500 rounded-md w-full ">
+        <div class="col-span-2 md:col-span-1 flex justify-between  bg-gray-500 rounded-md w-full ">
             <div class="flex justify-start ">
                 <img src="{{asset('storage/users/'. $this->best_cashier->user->profile) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
             </div>
-            <div class="w-full flex flex-col my-2 space-y-2">
+            <div class="w-full flex flex-col my-2 py-3 space-y-2">
                 <h1 class="text-lg font-semibold text-center ">Best Cashier</h1>
                 <h1 class="text-3xl font-semibold text-center">{{$this->best_cashier->user->name}}</h1>
                 <p class="text-3xl font-semibold text-center ">Transaction: {{$this->best_cashier->total}}</p>
@@ -138,20 +139,20 @@ new class extends Component
         </div>  
         </div>
 
-        <div class="flex justify-evenly space-x-3 w-full my-3">
-            <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
+        <div class="grid grid-cols-4 gap-2 w-full my-2">
+            <div class="col-span-2 md:col-span-1 flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
                 <h1 class="text-lg font-semibold text-center my-1">Total Payment</h1>
                 <h1 class="text-2xl my-2 font-semibold text-center">Rp.{{number_format($this->total_payment)}}</h1>
             </div>
-            <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
+            <div class="col-span-2 md:col-span-1 flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
                 <h1 class="text-lg font-semibold text-center my-1">Total Transaction</h1>
                 <h1 class="text-2xl my-2 font-semibold text-center">{{$this->total_transaction}}</h1>
             </div>
-            <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
+            <div class="col-span-2 md:col-span-1 flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
                 <h1 class="text-lg font-semibold text-center my-1">Product Sold</h1>
                 <h1 class="text-2xl my-2 font-semibold text-center">{{$this->total_product}}</h1>
             </div>
-             <div class="flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
+             <div class="col-span-2 md:col-span-1 flex flex-col bg-gray-500 w-200 rounded-md w-full py-3">
                 <h1 class="text-lg font-semibold text-center my-1">Average Invoice</h1>
                 <h1 class="text-2xl my-2 font-semibold text-center">Rp.{{number_format($this->avg_total->avg)}}</h1>
             </div>
