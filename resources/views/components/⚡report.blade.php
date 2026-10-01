@@ -166,7 +166,7 @@ new class extends Component
             <div class="flex justify-start ">
                 <img src="{{asset('storage/products/'. $this->best_seller->product->image) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
             </div>
-            <div class="w-full flex flex-col space-y-2 py-3 my-2">
+            <div class="w-full flex flex-col justify-center space-y-1 py-3 my-2">
                 <h1 class="text-lg font-semibold text-center ">Best Seller</h1>
                 <h1 class="text-3xl font-semibold text-center ">{{$this->best_seller->product->name}}</h1>
                 <p class="text-3xl font-semibold text-center">Purchases: {{$this->best_seller->total_qty}}</p>
@@ -177,7 +177,7 @@ new class extends Component
             <div class="flex justify-start ">
                 <img src="{{asset('storage/users/'. $this->best_cashier->user->profile) }}" alt="iamge" class="h-full w-40 object-cover rounded-md">
             </div>
-            <div class="w-full flex flex-col my-2 py-3 space-y-2">
+            <div class="w-full flex justify-center flex-col my-1 py-3 space-y-2">
                 <h1 class="text-lg font-semibold text-center ">Best Cashier</h1>
                 <h1 class="text-3xl font-semibold text-center">{{$this->best_cashier->user->name}}</h1>
                 <p class="text-3xl font-semibold text-center ">Transaction: {{$this->best_cashier->total}}</p>
