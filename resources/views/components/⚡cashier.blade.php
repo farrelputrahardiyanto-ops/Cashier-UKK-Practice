@@ -436,9 +436,13 @@ x-on:print.window="window.print()"
                 </div>
              @endforelse
 
-             @if ($this->cart != Null)
+             
+             
+             </div>
+             <div class="flex flex-col my-2 shadow-[35px_35px_35px_35px_rgba(0,0,0,0.25)] z-10">
+                @if ($this->cart != Null)
                  <div class="w-full flex flex-col spacey-2 justify-center px-3 h-auto">
-                    <x-native-select
+                    <x-select
                     :options="$this->customers"
                     option-value="id"
                     option-label="name"
@@ -449,9 +453,6 @@ x-on:print.window="window.print()"
                     
                  </div>
              @endif
-             
-             </div>
-             <div class="flex flex-col my-2 shadow-[35px_35px_35px_35px_rgba(0,0,0,0.25)] z-10">
                 <h1 class="text-center text-lg">Total: Rp.{{number_format($this->getTotal())}}</h1>
                     <x-button label="Checkout"  wire:click="invoice" class="mx-auto my-3" />
              </div>

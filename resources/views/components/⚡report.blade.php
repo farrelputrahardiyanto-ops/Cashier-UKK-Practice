@@ -9,20 +9,19 @@ new class extends Component
 {
 
     public $month_option = [
-        '01' => "January",
-        '02' => "February",
-        '03' => "March",
-        '04' => "April",
-        '05' => 'May',
-        '06' => "June",
-        '07' => "July",
-        '08' => "August",
-        "09" => "September",
-        '10' => "October",
-        '11' => "November",
-        '12' => 'December'
-
-    ];
+    ['name' => 'January', 'id' => '01'],
+    ['name' => 'February', 'id' => '02'],
+    ['name' => 'March', 'id' => '03'],
+    ['name' => 'April', 'id' => '04'],
+    ['name' => 'May', 'id' => '05'],
+    ['name' => 'June', 'id' => '06'],
+    ['name' => 'July', 'id' => '07'],
+    ['name' => 'August', 'id' => '08'],
+    ['name' => 'September', 'id' => '09'],
+    ['name' => 'October', 'id' => '10'],
+    ['name' => 'November', 'id' => '11'],
+    ['name' => 'December', 'id' => '12'],
+];
 
 
     public $search = '';
@@ -47,15 +46,43 @@ new class extends Component
 
     public $avg_total;
 
+    public $month_name;
+
     
     public function mount()
     {
-        $this->month_now = now()->format('F');
+        $this->month_now = now()->format('m');
 
-        $this->month_number = date('m', strtotime($this->month_now));
+        
 
-        $this->startDate =  Carbon::create(now()->year, $this->month_number, 1)->startOfMonth();
-        $this->endDate = Carbon::create(now()->year, $this->month_number, 1)->endOFMonth();
+        $this->updateReport();          
+
+        
+    }
+
+    public function updateReport()
+    {   
+        $this->month_number = $this->month_now;
+        $this->month_name = collect($this->month_option)
+         ->firstWhere('id', $this->month_now)['name'];
+
+
+        $this->startDate = Carbon::create(
+            now()->year,
+            $this->month_now,
+            1
+        )->startOfMonth();
+
+        $this->endDate = Carbon::create(
+            now()->year,
+            $this->month_now,
+            1
+        )->endOfMonth();
+
+        // reset
+        $this->total_payment = 0;
+        $this->total_transaction = 0;
+        $this->total_product = 0;
 
         $invoices = Invoice::whereBetween('created_at', [$this->startDate, $this->endDate])->get();
 
@@ -88,8 +115,15 @@ new class extends Component
         ->selectRaw('AVG(total) as avg')
         ->first();
 
-      
-        
+    // dst...
+    }
+
+
+
+    public function updatedMonthNow()
+    {
+    
+        $this->updateReport();
     }
 
 
@@ -106,15 +140,27 @@ new class extends Component
 <div>
     
     <div class="max-w-6xl p-4 mx-auto my-4 overflow-x-auto">
-        <h1 class="text-3xl py-5 font-semibold">Transaction Report {{$this->month_now}}</h1>
+        <h1 class="text-3xl py-5 font-semibold">Transaction Report {{$this->month_name}}</h1>
         <div class="flex justify-end">
             <div class="max-w-2xl">
-                <x-native-select :options="$this->month_option" wire:model.live="month_now"  />
+                
+              
+
+                <x-native-select
+                :options="$this->month_option"
+                option-label="name"
+                option-value="id"
+                wire:model.live.change="month_now" />
+
             </div>
-           
         </div>
 
-        <div class="grid grid-cols-2 mt-4 gap-2">
+        @if ($this->best_seller == null)
+
+            <x-alert warning title="Data Null" class="my-3"/>
+
+        @else    
+            <div class="grid grid-cols-2 mt-4 gap-2">
 
             <div class="col-span-2 md:col-span-1 flex justify-between   bg-gray-500 rounded-md w-full ">
             <div class="flex justify-start ">
@@ -158,6 +204,9 @@ new class extends Component
             </div>
             
         </div>
+        @endif
+
+        
 
         
 
